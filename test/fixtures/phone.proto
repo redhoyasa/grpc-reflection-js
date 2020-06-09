@@ -1,0 +1,15 @@
+syntax = "proto3";
+package phone;
+
+service Messenger {
+  rpc Message(TextRequest) returns (TextResponse);
+}
+
+message TextRequest {
+  string id = 1;
+  string message = 2;
+}
+
+message TextResponse {
+  bool success = 1;
+}

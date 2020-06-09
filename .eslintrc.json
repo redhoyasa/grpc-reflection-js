@@ -1,0 +1,12 @@
+{
+  "extends": "./node_modules/gts/",
+  "plugins": [
+    "jest"
+  ],
+  "env": {
+    "jest/globals": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  }
+}

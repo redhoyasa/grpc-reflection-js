@@ -1,0 +1,11 @@
+version: "3"
+services:
+  gripmock:
+    image: tkpd/gripmock
+    restart: always
+    volumes: 
+      - ./test/fixtures:/proto
+    ports:
+      - 4770:4770
+      - 4771:4771
+    command: /proto/phone.proto
