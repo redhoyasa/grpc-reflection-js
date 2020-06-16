@@ -5,13 +5,12 @@
     "outDir": "build",
     "esModuleInterop": true,
     "allowJs": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
+    "declaration": true
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.js",
-    "test/**/*.ts", "index.ts"
-  ],
-  
+    "test/**/*.ts", 
+    "index.ts",
+  ],  
 }

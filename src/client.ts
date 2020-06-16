@@ -28,11 +28,16 @@ export class Client {
     this.grpcClient = new reflectionService(url, credentials, options);
   }
 
-  listServices(): Promise<any> {
+  listServices(): Promise<string[]> {
     return new Promise((resolve, reject) => {
       function dataCallback(response: any) {
         if ('list_services_response' in response) {
-          resolve(response.list_services_response.service);
+          const services = response.list_services_response.service.map(
+            (svc: {name: string}) => {
+              return svc.name;
+            }
+          );
+          resolve(services);
         } else {
           reject(Error());
         }
@@ -49,7 +54,7 @@ export class Client {
     });
   }
 
-  fileContainingSymbol(symbol: string) {
+  fileContainingSymbol(symbol: string): Promise<grpc.GrpcObject> {
     return new Promise((resolve, reject) => {
       function dataCallback(response: any) {
         if ('file_descriptor_response' in response) {
