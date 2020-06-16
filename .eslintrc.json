@@ -2,5 +2,8 @@
   "extends": "./node_modules/gts/",
   "parserOptions": {
     "sourceType": "module"
+  },
+  "rules": {
+    "eqeqeq": "off"
   }
 }
