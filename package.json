@@ -8,11 +8,14 @@
     "@grpc/grpc-js": "^1.0.3",
     "@grpc/proto-loader": "^0.5.4",
     "@types/async": "^3.2.3",
+    "@types/google-protobuf": "^3.7.2",
     "@types/lodash.get": "^4.4.6",
     "@types/lodash.set": "^4.3.6",
     "@types/protobufjs": "^6.0.0",
     "async": "^3.2.0",
     "grpc": "^1.24.2",
+    "grpc-tools": "^1.9.0",
+    "grpc_tools_node_protoc_ts": "^4.0.0",
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2",
     "protobufjs": "^6.9.0"
@@ -43,6 +46,7 @@
     "test": "mocha -r ts-node/register test/**/*.test.ts",
     "prepare": "yarn run compile",
     "pretest": "yarn run compile",
-    "posttest": "yarn run check"
+    "posttest": "yarn run check",
+    "protoc": "grpc_tools_node_protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=./src -I ./static/grpc/reflection/v1alpha reflection.proto"
   }
 }
