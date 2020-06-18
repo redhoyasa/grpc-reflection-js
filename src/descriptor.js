@@ -9,7 +9,7 @@ const set = require('lodash.set');
 /**
  * Get Protobuf.js Root object from the serialized FileDescriptorProto messages
  * that gotten from reflection service.
- * @param {Buffer[]} file_descriptor_protos - Reflection descriptor protos
+ * @param {Array<Uint8Array|string>|undefined} file_descriptor_protos - Reflection descriptor protos
  * @return {Root} Protobuf.js Root object
  */
 // eslint-disable-next-line node/no-unsupported-features/es-syntax

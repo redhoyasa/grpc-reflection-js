@@ -12,7 +12,7 @@ describe('listServices', () => {
       grpc.credentials.createInsecure()
     );
 
-    const expectedServices: string[] = [
+    const expectedServices: string[] | void[] = [
       'grpc.reflection.v1alpha.ServerReflection',
       'phone.Messenger',
     ];
