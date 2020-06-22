@@ -2,6 +2,7 @@
   "name": "grpc-reflection-js",
   "version": "0.0.1",
   "main": "build/src/index.js",
+  "repository": "https://github.com/redhoyasa/grpc-reflection-js",
   "author": "redhoyasa@gmail.com",
   "license": "MIT",
   "dependencies": {
@@ -52,9 +53,6 @@
     "protoc-grpc": "protoc-gen-grpc --js_out=import_style=commonjs,binary:./src --grpc_out=./src -I ./static/grpc/reflection/v1alpha reflection.proto",
     "protoc": "yarn run protoc-pb && yarn run protoc-grpc"
   },
-  "files": [
-    "src/*.ts",
-    "build/src/*.{js,d.ts,js.map}",
-    "LICENSE"
-  ]
+  "files": ["src", "build", "LICENSE"],
+  "keywords": ["grpc"]
 }
