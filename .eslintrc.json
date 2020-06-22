@@ -4,6 +4,8 @@
     "sourceType": "module"
   },
   "rules": {
-    "eqeqeq": "off"
+    "eqeqeq": "off",
+    "node/no-unpublished-require": "off",
+    "node/no-unpublished-import": "off"
   }
 }
