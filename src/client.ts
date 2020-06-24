@@ -7,7 +7,7 @@ import {
 } from './reflection_pb';
 
 export class Client {
-  private readonly grpcClient: services.IServerReflectionClient;
+  grpcClient: services.IServerReflectionClient;
   constructor(
     url: string,
     credentials: grpc.ChannelCredentials,
@@ -39,10 +39,10 @@ export class Client {
       const request = new ServerReflectionRequest();
       request.setListServices('*');
 
-      const callGrpc = this.grpcClient.serverReflectionInfo({});
-      callGrpc.on('data', dataCallback);
-      callGrpc.write(request);
-      callGrpc.end();
+      const grpcCall = this.grpcClient.serverReflectionInfo({});
+      grpcCall.on('data', dataCallback);
+      grpcCall.write(request);
+      grpcCall.end();
     });
   }
 
@@ -63,10 +63,10 @@ export class Client {
       const request = new ServerReflectionRequest();
       request.setFileContainingSymbol(symbol);
 
-      const callGrpc = this.grpcClient.serverReflectionInfo({});
-      callGrpc.on('data', dataCallback);
-      callGrpc.write(request);
-      callGrpc.end();
+      const grpcCall = this.grpcClient.serverReflectionInfo({});
+      grpcCall.on('data', dataCallback);
+      grpcCall.write(request);
+      grpcCall.end();
     });
   }
 }

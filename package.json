@@ -24,6 +24,7 @@
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.11.1",
+    "@types/sinon": "^9.0.4",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "chai": "^4.2.0",
@@ -35,8 +36,10 @@
     "grpc_tools_node_protoc_ts": "^4.0.0",
     "gts": "^2.0.2",
     "mocha": "^7.2.0",
+    "nyc": "^15.1.0",
     "prettier": "^2.0.5",
     "protoc-gen-grpc": "^1.4.0",
+    "sinon": "^9.0.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5"
   },
@@ -45,7 +48,8 @@
     "clean": "gts clean",
     "compile": "tsc",
     "fix": "gts fix",
-    "test": "TS_NODE_FILES=true mocha -r ts-node/register test/**/*.test.ts",
+    "test": "nyc mocha -r ts-node/register test/**/*.test.ts",
+    "coverage": "nyc report --reporter=json > coverage/coverage.json",
     "prepare": "yarn run compile",
     "pretest": "yarn run compile",
     "posttest": "yarn run check",
@@ -53,6 +57,12 @@
     "protoc-grpc": "protoc-gen-grpc --js_out=import_style=commonjs,binary:./src --grpc_out=./src -I ./static/grpc/reflection/v1alpha reflection.proto",
     "protoc": "yarn run protoc-pb && yarn run protoc-grpc"
   },
-  "files": ["src", "build", "LICENSE"],
-  "keywords": ["grpc"]
+  "files": [
+    "src",
+    "build",
+    "LICENSE"
+  ],
+  "keywords": [
+    "grpc"
+  ]
 }
