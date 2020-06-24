@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node 12 
+      uses: actions/setup-node@v2-beta
+      with:
+        node-version: '12'
+    - name: Install packages
+      run: npm install
+    - name: Run test
+      run: npm test
+    - name: Run fix
+      run: npm run fix
+    - name: Coverage report
+      run: npm run coverage
+    - name: Upload report
+      run: bash <(curl -s https://codecov.io/bash)
