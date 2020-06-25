@@ -18,9 +18,7 @@ jobs:
       run: npm install
     - name: Run test
       run: npm test
-    - name: Run fix
-      run: npm run fix
     - name: Coverage report
-      run: npm run coverage
+      run: npm run report
     - name: Upload report
       run: bash <(curl -s https://codecov.io/bash)
