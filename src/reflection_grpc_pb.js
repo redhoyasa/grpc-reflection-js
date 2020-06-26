@@ -18,44 +18,33 @@
 // Service exported by server reflection
 //
 'use strict';
-const grpc = require('grpc');
-const reflection_pb = require('./reflection_pb.js');
+var grpc = require('grpc');
+var reflection_pb = require('./reflection_pb.js');
 
 function serialize_grpc_reflection_v1alpha_ServerReflectionRequest(arg) {
   if (!(arg instanceof reflection_pb.ServerReflectionRequest)) {
-    throw new Error(
-      'Expected argument of type grpc.reflection.v1alpha.ServerReflectionRequest'
-    );
+    throw new Error('Expected argument of type grpc.reflection.v1alpha.ServerReflectionRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_grpc_reflection_v1alpha_ServerReflectionRequest(
-  buffer_arg
-) {
-  return reflection_pb.ServerReflectionRequest.deserializeBinary(
-    new Uint8Array(buffer_arg)
-  );
+function deserialize_grpc_reflection_v1alpha_ServerReflectionRequest(buffer_arg) {
+  return reflection_pb.ServerReflectionRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_grpc_reflection_v1alpha_ServerReflectionResponse(arg) {
   if (!(arg instanceof reflection_pb.ServerReflectionResponse)) {
-    throw new Error(
-      'Expected argument of type grpc.reflection.v1alpha.ServerReflectionResponse'
-    );
+    throw new Error('Expected argument of type grpc.reflection.v1alpha.ServerReflectionResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_grpc_reflection_v1alpha_ServerReflectionResponse(
-  buffer_arg
-) {
-  return reflection_pb.ServerReflectionResponse.deserializeBinary(
-    new Uint8Array(buffer_arg)
-  );
+function deserialize_grpc_reflection_v1alpha_ServerReflectionResponse(buffer_arg) {
+  return reflection_pb.ServerReflectionResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-const ServerReflectionService = (exports.ServerReflectionService = {
+
+var ServerReflectionService = exports.ServerReflectionService = {
   // The reflection service is structured as a bidirectional stream, ensuring
   // all related requests go to a single server.
   serverReflectionInfo: {
@@ -69,8 +58,6 @@ const ServerReflectionService = (exports.ServerReflectionService = {
     responseSerialize: serialize_grpc_reflection_v1alpha_ServerReflectionResponse,
     responseDeserialize: deserialize_grpc_reflection_v1alpha_ServerReflectionResponse,
   },
-});
+};
 
-exports.ServerReflectionClient = grpc.makeGenericClientConstructor(
-  ServerReflectionService
-);
+exports.ServerReflectionClient = grpc.makeGenericClientConstructor(ServerReflectionService);

@@ -1,0 +1,8 @@
+src/
+test/
+static/
+docker-compose.yml
+.github/
+.nyc_output
+.coverage
+.vscode
