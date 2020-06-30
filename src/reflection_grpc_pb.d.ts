@@ -13,8 +13,8 @@ interface IServerReflectionService extends grpc.ServiceDefinition<grpc.UntypedSe
 
 interface IServerReflectionService_IServerReflectionInfo extends grpc.MethodDefinition<reflection_pb.ServerReflectionRequest, reflection_pb.ServerReflectionResponse> {
     path: string; // "/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo"
-    requestStream: boolean; // true
-    responseStream: boolean; // true
+    requestStream: true;
+    responseStream: true;
     requestSerialize: grpc.serialize<reflection_pb.ServerReflectionRequest>;
     requestDeserialize: grpc.deserialize<reflection_pb.ServerReflectionRequest>;
     responseSerialize: grpc.serialize<reflection_pb.ServerReflectionResponse>;

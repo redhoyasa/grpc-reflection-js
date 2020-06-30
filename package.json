@@ -1,21 +1,15 @@
 {
   "name": "grpc-reflection-js",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "build/src/index.js",
   "repository": "https://github.com/redhoyasa/grpc-reflection-js",
   "author": "redhoyasa@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "@grpc/grpc-js": "^1.0.3",
-    "@grpc/proto-loader": "^0.5.4",
-    "@types/async": "^3.2.3",
     "@types/google-protobuf": "^3.7.2",
-    "@types/lodash.get": "^4.4.6",
     "@types/lodash.set": "^4.3.6",
-    "@types/protobufjs": "^6.0.0",
-    "async": "^3.2.0",
+    "google-protobuf": "^3.12.2",
     "grpc": "^1.24.2",
-    "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2",
     "protobufjs": "^6.9.0"
   },
