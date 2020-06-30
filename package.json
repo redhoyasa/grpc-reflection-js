@@ -48,7 +48,8 @@
     "posttest": "yarn run check",
     "protoc-pb": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src --ts_out=./src -I ./static/grpc/reflection/v1alpha reflection.proto",
     "protoc-grpc": "protoc-gen-grpc --js_out=import_style=commonjs,binary:./src --grpc_out=./src -I ./static/grpc/reflection/v1alpha reflection.proto",
-    "protoc": "yarn run protoc-pb && yarn run protoc-grpc"
+    "protoc": "yarn run protoc-pb && yarn run protoc-grpc",
+    "build": "yarn run compile && yarn run fix && yarn run check"
   },
   "files": [
     "build",
