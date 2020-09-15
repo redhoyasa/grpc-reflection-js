@@ -5,6 +5,7 @@ import {
   ServerReflectionRequest,
   ServerReflectionResponse,
 } from './reflection_pb';
+import {Root} from 'protobufjs';
 
 export class Client {
   grpcClient: services.IServerReflectionClient;
@@ -46,15 +47,14 @@ export class Client {
     });
   }
 
-  fileContainingSymbol(symbol: string): Promise<grpc.GrpcObject> {
+  fileContainingSymbol(symbol: string): Promise<Root> {
     return new Promise((resolve, reject) => {
       function dataCallback(response: ServerReflectionResponse) {
         if (response.hasFileDescriptorResponse()) {
           const root = getDescriptorRoot(
             response.getFileDescriptorResponse()?.getFileDescriptorProtoList()
           );
-          const res = grpc.loadObject(root);
-          resolve(res);
+          resolve(root);
         } else {
           reject(Error());
         }
