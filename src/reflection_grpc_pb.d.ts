@@ -4,7 +4,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import * as grpc from "grpc";
+import * as grpc from "@grpc/grpc-js";
+import {handleClientStreamingCall} from "@grpc/grpc-js/build/src/server-call";
 import * as reflection_pb from "./reflection_pb";
 
 interface IServerReflectionService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
@@ -12,7 +13,7 @@ interface IServerReflectionService extends grpc.ServiceDefinition<grpc.UntypedSe
 }
 
 interface IServerReflectionService_IServerReflectionInfo extends grpc.MethodDefinition<reflection_pb.ServerReflectionRequest, reflection_pb.ServerReflectionResponse> {
-    path: string; // "/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo"
+    path: "/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo";
     requestStream: true;
     responseStream: true;
     requestSerialize: grpc.serialize<reflection_pb.ServerReflectionRequest>;
@@ -34,7 +35,7 @@ export interface IServerReflectionClient {
 }
 
 export class ServerReflectionClient extends grpc.Client implements IServerReflectionClient {
-    constructor(address: string, credentials: grpc.ChannelCredentials, options?: object);
+    constructor(address: string, credentials: grpc.ChannelCredentials, options?: Partial<grpc.ClientOptions>);
     public serverReflectionInfo(options?: Partial<grpc.CallOptions>): grpc.ClientDuplexStream<reflection_pb.ServerReflectionRequest, reflection_pb.ServerReflectionResponse>;
     public serverReflectionInfo(metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientDuplexStream<reflection_pb.ServerReflectionRequest, reflection_pb.ServerReflectionResponse>;
 }

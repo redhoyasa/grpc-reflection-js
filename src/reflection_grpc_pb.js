@@ -18,7 +18,7 @@
 // Service exported by server reflection
 //
 'use strict';
-var grpc = require('grpc');
+var grpc = require('@grpc/grpc-js');
 var reflection_pb = require('./reflection_pb.js');
 
 function serialize_grpc_reflection_v1alpha_ServerReflectionRequest(arg) {
@@ -46,8 +46,8 @@ function deserialize_grpc_reflection_v1alpha_ServerReflectionResponse(buffer_arg
 
 var ServerReflectionService = exports.ServerReflectionService = {
   // The reflection service is structured as a bidirectional stream, ensuring
-  // all related requests go to a single server.
-  serverReflectionInfo: {
+// all related requests go to a single server.
+serverReflectionInfo: {
     path: '/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo',
     requestStream: true,
     responseStream: true,

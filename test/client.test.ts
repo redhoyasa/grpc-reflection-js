@@ -1,5 +1,5 @@
 import {Client} from '../src/client';
-import * as grpc from 'grpc';
+import {credentials} from '@grpc/grpc-js';
 // eslint-disable-next-line node/no-unpublished-import
 import {assert} from 'chai';
 import * as sinon from 'sinon';
@@ -15,7 +15,7 @@ describe('listServices', () => {
   it('should return services', async () => {
     const reflectionClient = new Client(
       'localhost:4770',
-      grpc.credentials.createInsecure()
+      credentials.createInsecure()
     );
 
     const grpcCall = {

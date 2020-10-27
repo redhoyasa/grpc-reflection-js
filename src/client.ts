@@ -1,4 +1,4 @@
-import * as grpc from 'grpc';
+import {ChannelCredentials} from '@grpc/grpc-js';
 import {getDescriptorRoot} from './descriptor';
 import * as services from './reflection_grpc_pb';
 import {
@@ -9,11 +9,7 @@ import {Root} from 'protobufjs';
 
 export class Client {
   grpcClient: services.IServerReflectionClient;
-  constructor(
-    url: string,
-    credentials: grpc.ChannelCredentials,
-    options?: object
-  ) {
+  constructor(url: string, credentials: ChannelCredentials, options?: object) {
     this.grpcClient = new services.ServerReflectionClient(
       url,
       credentials,
