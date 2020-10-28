@@ -1,6 +1,6 @@
 {
   "name": "grpc-reflection-js",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "main": "build/src/index.js",
   "repository": "https://github.com/redhoyasa/grpc-reflection-js",
   "author": "redhoyasa@gmail.com",
