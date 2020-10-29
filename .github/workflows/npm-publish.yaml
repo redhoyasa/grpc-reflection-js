@@ -15,9 +15,9 @@ jobs:
       with:
         node-version: 12.0.0
     - name: Setup NPM credentials
-        run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
     - run: npm install
     - run: npm run build
     - name: Publish if version has been updated
