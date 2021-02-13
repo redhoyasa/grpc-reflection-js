@@ -57,6 +57,14 @@ export class Client {
     });
   }
 
+  fileByFilename(filename: string): Promise<Root> {
+    return new Promise((resolve, reject) => {
+      this.getFileByFilename(filename)
+        .then(val => resolve(this.resolveFileDescriptorSet(val)))
+        .catch(err => reject(err));
+    });
+  }
+
   private async resolveFileDescriptorSet(
     fileDescriptorProtoBytes: Array<Uint8Array | string> | undefined
   ): Promise<Root> {

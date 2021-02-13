@@ -15,6 +15,7 @@ npm install grpc-reflection-js
 - [Initialize client](#Initialize client)
 - [listServices](#listServices): List gRPC services
 - [fileContainingSymbol](#fileContainingSymbol): Get protobuf Root using fully-qualified symbol name
+- [fileByFilename](#fileByFilename): Get protobuf Root using proto file name
 
 
 ### Initialize client
@@ -41,4 +42,9 @@ Output
 ### fileContainingSymbol
 ```js
 const root = await reflectionClient.fileContainingSymbol('phone.Messenger')
+```
+
+### fileByFilename
+```js
+const root = await reflectionClient.fileContainingSymbol('contact.proto')
 ```
