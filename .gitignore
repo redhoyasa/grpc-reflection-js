@@ -1,4 +1,4 @@
-### Build ### 
+### Build ###
 build/
 
 # Created by https://www.gitignore.io/api/node,visualstudiocode
@@ -116,6 +116,7 @@ temp/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.idea/
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files

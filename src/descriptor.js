@@ -4,6 +4,7 @@ const set = require('lodash.set');
 
 /**
  * @typedef {import('protobufjs').Root} Root
+ * @typedef {import('protobufjs').Message} Message
  */
 
 /**
@@ -22,4 +23,14 @@ export function getDescriptorRoot(file_descriptor_protos) {
   });
 
   return protobuf.Root.fromDescriptor(descriptorSet);
+}
+
+/**
+ * Get Protobuf.js Root object from FileDescriptorSet
+ * @param {Message file_descriptor_set - File descriptor set
+ * @return {Root} Protobuf.js Root object
+ */
+// eslint-disable-next-line node/no-unsupported-features/es-syntax
+export function getDescriptorRootFromDescriptorSet(file_descriptor_set) {
+  return protobuf.Root.fromDescriptor(file_descriptor_set);
 }

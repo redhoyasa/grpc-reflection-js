@@ -8,4 +8,4 @@ services:
     ports:
       - 4770:4770
       - 4771:4771
-    command: /proto/phone.proto
+    command: /proto/contact.proto /proto/phone.proto

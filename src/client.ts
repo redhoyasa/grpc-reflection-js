@@ -45,12 +45,21 @@ export class Client {
 
   fileContainingSymbol(symbol: string): Promise<Root> {
     return new Promise((resolve, reject) => {
+      this.getFileContainingSymbol(symbol)
+        .then(val => resolve(getDescriptorRoot(val)))
+        .catch(err => reject(err));
+    });
+  }
+
+  private getFileContainingSymbol(
+    symbol: string
+  ): Promise<Array<Uint8Array | string> | undefined> {
+    return new Promise((resolve, reject) => {
       function dataCallback(response: ServerReflectionResponse) {
         if (response.hasFileDescriptorResponse()) {
-          const root = getDescriptorRoot(
+          resolve(
             response.getFileDescriptorResponse()?.getFileDescriptorProtoList()
           );
-          resolve(root);
         } else {
           reject(Error());
         }
