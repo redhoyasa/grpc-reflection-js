@@ -60,7 +60,7 @@ describe('fileContainingSymbol', () => {
       credentials.createInsecure()
     );
 
-    const grpcCall = {
+    const grpcCallPhone = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       on: function (_event: string, listener: (...args: any[]) => void) {
         const res = new ServerReflectionResponse();
@@ -76,9 +76,26 @@ describe('fileContainingSymbol', () => {
       end: function () {},
     };
 
+    const grpcCallContact = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      on: function (_event: string, listener: (...args: any[]) => void) {
+        const res = new ServerReflectionResponse();
+        const fileDescriptorResponse = new FileDescriptorResponse();
+        // eslint-disable-next-line prettier/prettier
+        const protoBytes = Buffer.from([10,13,99,111,110,116,97,99,116,46,112,114,111,116,111,18,5,112,104,111,110,101,34,53,10,7,67,111,110,116,97,99,116,18,18,10,4,110,97,109,101,24,1,32,1,40,9,82,4,110,97,109,101,18,22,10,6,110,117,109,98,101,114,24,2,32,1,40,9,82,6,110,117,109,98,101,114,98,6,112,114,111,116,111,51]);
+        fileDescriptorResponse.addFileDescriptorProto(protoBytes);
+        res.setFileDescriptorResponse(fileDescriptorResponse);
+
+        listener(res);
+      },
+      write: function () {},
+      end: function () {},
+    };
+
     const mock = sinon.mock(reflectionClient.grpcClient);
-    mock.expects('serverReflectionInfo').once().returns(grpcCall);
+    mock.expects('serverReflectionInfo').once().returns(grpcCallPhone);
+    mock.expects('serverReflectionInfo').once().returns(grpcCallContact);
     const root = await reflectionClient.fileContainingSymbol('phone.Messenger');
-    assert.deepEqual(root.files, ['phone.proto']);
+    assert.deepEqual(root.files, ['contact.proto', 'phone.proto']);
   });
 });

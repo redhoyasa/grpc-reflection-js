@@ -21,7 +21,6 @@ export function getDescriptorRoot(file_descriptor_protos) {
     const descriptor = Descriptor.FileDescriptorProto.decode(descriptorByte);
     set(descriptorSet, 'file[' + i + ']', descriptor);
   });
-
   return protobuf.Root.fromDescriptor(descriptorSet);
 }
 
