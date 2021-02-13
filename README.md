@@ -12,13 +12,13 @@ npm install grpc-reflection-js
 ```
 
 ## Usage
-- [Initialize client](#Initialize client)
+- [Initialize client](#Initialize)
 - [listServices](#listServices): List gRPC services
 - [fileContainingSymbol](#fileContainingSymbol): Get protobuf Root using fully-qualified symbol name
 - [fileByFilename](#fileByFilename): Get protobuf Root using proto file name
 
 
-### Initialize client
+### Initialize
 ```js
 const grpc = require('grpc');
 const grpcReflection = require('grpc-reflection-js');
@@ -48,3 +48,9 @@ const root = await reflectionClient.fileContainingSymbol('phone.Messenger')
 ```js
 const root = await reflectionClient.fileContainingSymbol('contact.proto')
 ```
+
+## License
+
+[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg?maxAge=2592000)](https://raw.githubusercontent.com/apollostack/apollo-ios/master/LICENSE)
+
+MIT
