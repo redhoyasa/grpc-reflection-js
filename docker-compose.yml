@@ -3,7 +3,7 @@ services:
   gripmock:
     image: tkpd/gripmock
     restart: always
-    volumes: 
+    volumes:
       - ./test/fixtures:/proto
     ports:
       - 4770:4770
