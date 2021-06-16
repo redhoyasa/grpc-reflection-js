@@ -7,8 +7,14 @@ A JS library for talking with any gRPC Server that implements [Reflection](https
 
 ## Installation
 
+Install with npm:
 ```sh
-npm install grpc-reflection-js
+npm install grpc-reflection-js @grpc/grpc-js
+```
+
+Install with yarn:
+```sh
+yarn add grpc-reflection-js @grpc/grpc-js
 ```
 
 ## Usage
