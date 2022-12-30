@@ -29,7 +29,7 @@
     "grpc-tools": "^1.9.1",
     "grpc_tools_node_protoc_ts": "^5.0.0",
     "gts": "^2.0.2",
-    "mocha": "^7.2.0",
+    "mocha": "^10.2.0",
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
     "sinon": "^9.0.2",
