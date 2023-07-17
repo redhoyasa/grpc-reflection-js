@@ -43,11 +43,11 @@ describe('listServices', () => {
     const mock = sinon.mock(reflectionClient.grpcClient);
     mock.expects('serverReflectionInfo').once().returns(grpcCall);
 
-    const expectedServices: string[] | void[] = [
+    const expectedServices: string[] = [
       'grpc.reflection.v1alpha.ServerReflection',
       'phone.Messenger',
     ];
-    assert.deepEqual(await reflectionClient.listServices(), expectedServices);
+    assert.sameMembers(await reflectionClient.listServices(), expectedServices);
   });
 });
 
@@ -63,6 +63,10 @@ describe('fileContainingSymbol', () => {
     const grpcCallPhone = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       on: function (_event: string, listener: (...args: any[]) => void) {
+        if (_event === 'error') {
+          return;
+        }
+
         const res = new ServerReflectionResponse();
         const fileDescriptorResponse = new FileDescriptorResponse();
         // eslint-disable-next-line prettier/prettier
@@ -79,6 +83,10 @@ describe('fileContainingSymbol', () => {
     const grpcCallContact = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       on: function (_event: string, listener: (...args: any[]) => void) {
+        if (_event === 'error') {
+          return;
+        }
+
         const res = new ServerReflectionResponse();
         const fileDescriptorResponse = new FileDescriptorResponse();
         // eslint-disable-next-line prettier/prettier
@@ -96,7 +104,7 @@ describe('fileContainingSymbol', () => {
     mock.expects('serverReflectionInfo').once().returns(grpcCallPhone);
     mock.expects('serverReflectionInfo').once().returns(grpcCallContact);
     const root = await reflectionClient.fileContainingSymbol('phone.Messenger');
-    assert.deepEqual(root.files, ['contact.proto', 'phone.proto']);
+    assert.sameDeepMembers(root.files, ['contact.proto', 'phone.proto']);
   });
 });
 
@@ -112,6 +120,9 @@ describe('fileByFilename', () => {
     const grpcCallContact = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       on: function (_event: string, listener: (...args: any[]) => void) {
+        if (_event === 'error') {
+          return;
+        }
         const res = new ServerReflectionResponse();
         const fileDescriptorResponse = new FileDescriptorResponse();
         // eslint-disable-next-line prettier/prettier
