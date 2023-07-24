@@ -1,4 +1,4 @@
-import {ChannelCredentials, ServiceError} from '@grpc/grpc-js';
+import {ChannelCredentials, Metadata, ServiceError} from '@grpc/grpc-js';
 import {getDescriptorRootFromDescriptorSet} from './descriptor';
 import * as services from './reflection_grpc_pb';
 import {
@@ -14,8 +14,17 @@ import {
 import set from 'lodash.set';
 
 export class Client {
+  metadata: Metadata;
   grpcClient: services.IServerReflectionClient;
-  constructor(url: string, credentials: ChannelCredentials, options?: object) {
+  private fileDescriptorCache: Map<string, IFileDescriptorProto> = new Map();
+  constructor(
+    url: string,
+    credentials: ChannelCredentials,
+    options?: object,
+    metadata?: Metadata
+  ) {
+    this.fileDescriptorCache = new Map();
+    this.metadata = metadata || new Metadata();
     this.grpcClient = new services.ServerReflectionClient(
       url,
       credentials,
@@ -23,7 +32,7 @@ export class Client {
     );
   }
 
-  listServices(): Promise<string[] | void[]> {
+  listServices(): Promise<string[]> {
     return new Promise((resolve, reject) => {
       function dataCallback(response: ServerReflectionResponse) {
         if (response.hasListServicesResponse()) {
@@ -33,7 +42,7 @@ export class Client {
             .map(svc => {
               return svc.getName();
             });
-          resolve(services);
+          resolve(services || []);
         } else {
           reject(Error());
         }
@@ -46,7 +55,7 @@ export class Client {
       const request = new ServerReflectionRequest();
       request.setListServices('*');
 
-      const grpcCall = this.grpcClient.serverReflectionInfo({});
+      const grpcCall = this.grpcClient.serverReflectionInfo(this.metadata);
       grpcCall.on('data', dataCallback);
       grpcCall.on('error', errorCallback);
       grpcCall.write(request);
@@ -64,62 +73,77 @@ export class Client {
 
   fileByFilename(filename: string): Promise<Root> {
     return new Promise((resolve, reject) => {
-      this.getFileByFilename(filename)
+      this.getFilesByFilenames([filename])
         .then(val => resolve(this.resolveFileDescriptorSet(val)))
         .catch(err => reject(err));
     });
   }
 
   private async resolveFileDescriptorSet(
-    fileDescriptorProtoBytes: Array<Uint8Array | string> | undefined
+    fileDescriptorProtos: Array<IFileDescriptorProto> | undefined
   ): Promise<Root> {
-    const fileDescriptorSet = FileDescriptorSet.create();
-    const fileDescriptorProtos = await this.resolveDescriptorRecursive(
-      fileDescriptorProtoBytes as Array<Uint8Array | string>
+    const fileDescriptorMap = await this.resolveDescriptorRecursive(
+      fileDescriptorProtos
     );
-    set(fileDescriptorSet, 'file', Array.from(fileDescriptorProtos.values()));
+    const fileDescriptorSet = FileDescriptorSet.create();
+    set(fileDescriptorSet, 'file', Array.from(fileDescriptorMap.values()));
     return getDescriptorRootFromDescriptorSet(fileDescriptorSet);
   }
 
   private async resolveDescriptorRecursive(
-    fileDescriptorProtoBytes: Array<Uint8Array | string>
+    fileDescriptorProtos: Array<IFileDescriptorProto> = [],
+    fileDescriptorMap: Map<string, IFileDescriptorProto> = new Map()
   ): Promise<Map<string, IFileDescriptorProto>> {
-    let fileDescriptorProtos: Map<string, IFileDescriptorProto> = new Map();
-    for (const descriptorByte of fileDescriptorProtoBytes) {
-      const fileDescriptorProto = FileDescriptorProto.decode(
-        descriptorByte as Uint8Array
-      ) as IFileDescriptorProto;
-      if (fileDescriptorProto.dependency) {
-        const dependencies = fileDescriptorProto.dependency as Array<string>;
-        for (const dep of dependencies) {
-          const depProtoBytes = await this.getFileByFilename(dep);
-          const protoDependencies = await this.resolveDescriptorRecursive(
-            depProtoBytes as Array<Uint8Array | string>
+    await Promise.all(
+      fileDescriptorProtos.map(async fileDescriptorProto => {
+        if (fileDescriptorMap.has(fileDescriptorProto.name as string)) {
+          return;
+        } else {
+          fileDescriptorMap.set(
+            fileDescriptorProto.name as string,
+            fileDescriptorProto
           );
-          fileDescriptorProtos = new Map([
-            ...fileDescriptorProtos,
-            ...protoDependencies,
-          ]);
         }
-      }
-      if (!fileDescriptorProtos.has(fileDescriptorProto.name as string)) {
-        fileDescriptorProtos.set(
-          fileDescriptorProto.name as string,
-          fileDescriptorProto
+
+        const dependencies = (fileDescriptorProto.dependency || []).filter(
+          (dependency: string) => !fileDescriptorMap.has(dependency)
         );
-      }
-    }
-    return fileDescriptorProtos;
+        if (dependencies.length) {
+          await this.resolveDescriptorRecursive(
+            await this.getFilesByFilenames(dependencies),
+            fileDescriptorMap
+          );
+        }
+      })
+    );
+
+    return fileDescriptorMap;
   }
 
   private getFileContainingSymbol(
     symbol: string
-  ): Promise<Array<Uint8Array | string> | undefined> {
+  ): Promise<Array<IFileDescriptorProto> | undefined> {
+    const fileDescriptorCache = this.fileDescriptorCache;
     return new Promise((resolve, reject) => {
       function dataCallback(response: ServerReflectionResponse) {
         if (response.hasFileDescriptorResponse()) {
+          const fileDescriptorProtoBytes = (response
+            .getFileDescriptorResponse()
+            ?.getFileDescriptorProtoList() || []) as Array<Uint8Array>;
+
           resolve(
-            response.getFileDescriptorResponse()?.getFileDescriptorProtoList()
+            fileDescriptorProtoBytes.map(descriptorByte => {
+              const fileDescriptorProto = FileDescriptorProto.decode(
+                descriptorByte
+              ) as IFileDescriptorProto;
+
+              fileDescriptorCache.set(
+                fileDescriptorProto.name as string,
+                fileDescriptorProto
+              );
+
+              return fileDescriptorProto;
+            })
           );
         } else {
           reject(Error());
@@ -133,7 +157,7 @@ export class Client {
       const request = new ServerReflectionRequest();
       request.setFileContainingSymbol(symbol);
 
-      const grpcCall = this.grpcClient.serverReflectionInfo({});
+      const grpcCall = this.grpcClient.serverReflectionInfo(this.metadata);
       grpcCall.on('data', dataCallback);
       grpcCall.on('error', errorCallback);
       grpcCall.write(request);
@@ -141,15 +165,44 @@ export class Client {
     });
   }
 
-  private getFileByFilename(
-    symbol: string
-  ): Promise<Array<Uint8Array | string> | undefined> {
+  private getFilesByFilenames(
+    symbols: string[]
+  ): Promise<Array<IFileDescriptorProto> | undefined> {
+    const result: Array<IFileDescriptorProto> = [];
+    const fileDescriptorCache = this.fileDescriptorCache;
+    const symbolsToFetch = symbols.filter(symbol => {
+      const cached = fileDescriptorCache.get(symbol);
+      if (cached) {
+        result.push(cached);
+        return false;
+      }
+      return true;
+    });
+
+    if (symbolsToFetch.length === 0) {
+      return Promise.resolve(result);
+    }
+
     return new Promise((resolve, reject) => {
       function dataCallback(response: ServerReflectionResponse) {
         if (response.hasFileDescriptorResponse()) {
-          resolve(
-            response.getFileDescriptorResponse()?.getFileDescriptorProtoList()
-          );
+          response
+            .getFileDescriptorResponse()
+            ?.getFileDescriptorProtoList()
+            ?.forEach(descriptorByte => {
+              if (descriptorByte instanceof Uint8Array) {
+                const fileDescriptorProto = FileDescriptorProto.decode(
+                  descriptorByte
+                ) as IFileDescriptorProto;
+
+                fileDescriptorCache.set(
+                  fileDescriptorProto.name as string,
+                  fileDescriptorProto
+                );
+
+                result.push(fileDescriptorProto);
+              }
+            });
         } else {
           reject(Error());
         }
@@ -159,13 +212,18 @@ export class Client {
         reject(e);
       }
 
-      const request = new ServerReflectionRequest();
-      request.setFileByFilename(symbol);
-
-      const grpcCall = this.grpcClient.serverReflectionInfo({});
+      const grpcCall = this.grpcClient.serverReflectionInfo(this.metadata);
       grpcCall.on('data', dataCallback);
       grpcCall.on('error', errorCallback);
-      grpcCall.write(request);
+      grpcCall.on('end', () => {
+        resolve(result);
+      });
+
+      const request = new ServerReflectionRequest();
+      symbolsToFetch.forEach(symbol => {
+        grpcCall.write(request.setFileByFilename(symbol));
+      });
+
       grpcCall.end();
     });
   }
