@@ -219,8 +219,8 @@ export class Client {
         resolve(result);
       });
 
-      const request = new ServerReflectionRequest();
       symbolsToFetch.forEach(symbol => {
+        const request = new ServerReflectionRequest();
         grpcCall.write(request.setFileByFilename(symbol));
       });
 
