@@ -1,7 +1,17 @@
 const protobuf = require('protobufjs');
 const Descriptor = require('protobufjs/ext/descriptor');
-const set = require('lodash.set');
 
+// eslint-disable-next-line node/no-unsupported-features/es-syntax
+export function set(obj, path, value) {
+  // Regex explained: https://regexr.com/58j0k
+  const pathArray = Array.isArray(path) ? path : path.match(/([^[.\]])+/g);
+
+  pathArray.reduce((acc, key, i) => {
+    if (acc[key] === undefined) acc[key] = {};
+    if (i === pathArray.length - 1) acc[key] = value;
+    return acc[key];
+  }, obj);
+}
 /**
  * @typedef {import('protobufjs').Root} Root
  * @typedef {import('protobufjs').Message} Message

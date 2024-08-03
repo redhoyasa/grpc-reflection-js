@@ -1,5 +1,5 @@
 import {ChannelCredentials, Metadata, ServiceError} from '@grpc/grpc-js';
-import {getDescriptorRootFromDescriptorSet} from './descriptor';
+import {getDescriptorRootFromDescriptorSet, set} from './descriptor';
 import * as services from './reflection_grpc_pb';
 import {
   ServerReflectionRequest,
@@ -11,7 +11,6 @@ import {
   IFileDescriptorProto,
   FileDescriptorProto,
 } from 'protobufjs/ext/descriptor';
-import set from 'lodash.set';
 
 export class Client {
   metadata: Metadata;
